@@ -1,7 +1,9 @@
 package handlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import dto.CreateUserDto;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,7 +32,9 @@ public class UsersHandler implements HttpHandler {
     private void handlePost(HttpExchange exchange) throws IOException {
         System.out.println("post user");
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-        System.out.println(requestBody);
+        ObjectMapper objectMapper = new ObjectMapper();
+        CreateUserDto createUserDto = objectMapper.readValue(requestBody, CreateUserDto.class);
+        System.out.println(createUserDto.username);
     }
 
     private void handleGet(HttpExchange exchange) throws IOException{
