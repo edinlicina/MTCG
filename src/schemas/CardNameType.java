@@ -1,3 +1,5 @@
+package schemas;
+
 public enum CardNameType {
     WaterGoblin,
     FireGoblin,

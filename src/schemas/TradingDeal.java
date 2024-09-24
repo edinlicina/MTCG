@@ -1,3 +1,5 @@
+package schemas;
+
 public class TradingDeal {
     String id;
     String cardToTrade;
