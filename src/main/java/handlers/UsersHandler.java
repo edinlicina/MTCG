@@ -3,6 +3,7 @@ package handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import database.DatabaseManager;
 import dto.CreateUserDto;
 
 import java.io.IOException;
@@ -10,7 +11,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class UsersHandler implements HttpHandler {
-
+private DatabaseManager databaseManager ;
+    public UsersHandler(DatabaseManager databaseManager){
+        this.databaseManager=databaseManager;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -53,7 +57,7 @@ public class UsersHandler implements HttpHandler {
         }
        String username = pathFragments[2];
         System.out.println(username);
-        //datadase userdata display
+        //database userdata display
 
     }
 

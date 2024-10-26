@@ -1,0 +1,16 @@
+
+
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mtcg123
+      POSTGRES_USER: edin
+      POSTGRES_DB: mtcgdb
+    volumes:
+      - /docker/mtcg/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
