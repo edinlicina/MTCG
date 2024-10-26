@@ -2,6 +2,7 @@
 
 import com.sun.net.httpserver.HttpServer;
 import database.DatabaseManager;
+import handlers.AuthorizationInterceptorHandler;
 import handlers.HelloWorldHandler;
 import handlers.UsersHandler;
 
@@ -15,7 +16,7 @@ public class Main{
         System.out.println("Hello world!");
         InetSocketAddress socketAddress = new InetSocketAddress(10000);
         HttpServer server = HttpServer.create(socketAddress, 0);
-        server.createContext("/hello-world", new HelloWorldHandler());
+        server.createContext("/hello-world",new AuthorizationInterceptorHandler(new HelloWorldHandler(), databaseManager));
         server.createContext("/users", new UsersHandler(databaseManager));
         server.start();
     }

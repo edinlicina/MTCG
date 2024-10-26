@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import database.DatabaseManager;
 import dto.CreateUserDto;
 import dto.LoginUserDto;
+import services.TokenService;
 import services.UsersService;
 
 import java.io.IOException;
@@ -13,12 +14,11 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class UsersHandler implements HttpHandler {
-    private UsersService usersService;
+    private final UsersService usersService;
 
     public UsersHandler(DatabaseManager databaseManager) {
         usersService = new UsersService(databaseManager);
     }
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String response = "hello users";

@@ -46,5 +46,4 @@ public class TokenUtil {
         // Check if the signatures match
         return receivedSignature.equals(expectedSignature);
     }
-
 }
