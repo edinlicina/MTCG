@@ -1,1 +1,2 @@
-# MTCG
+# Monster Traiding Card Game
+
