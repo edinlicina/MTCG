@@ -17,7 +17,7 @@ public class Main{
         HttpServer server = HttpServer.create(socketAddress, 0);
         server.createContext("/hello-world", new HelloWorldHandler());
         server.createContext("/users", new UsersHandler(databaseManager));
-
         server.start();
     }
+
 }

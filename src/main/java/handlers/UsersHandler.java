@@ -5,15 +5,18 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import database.DatabaseManager;
 import dto.CreateUserDto;
+import dto.LoginUserDto;
+import services.UsersService;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class UsersHandler implements HttpHandler {
-private DatabaseManager databaseManager ;
-    public UsersHandler(DatabaseManager databaseManager){
-        this.databaseManager=databaseManager;
+    private UsersService usersService;
+
+    public UsersHandler(DatabaseManager databaseManager) {
+        usersService = new UsersService(databaseManager);
     }
 
     @Override
@@ -34,20 +37,46 @@ private DatabaseManager databaseManager ;
     }
 
     private void handlePost(HttpExchange exchange) throws IOException {
-        System.out.println("post user");
+        String path = exchange.getRequestURI().getPath();
         String requestBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
         ObjectMapper objectMapper = new ObjectMapper();
-        CreateUserDto createUserDto = objectMapper.readValue(requestBody, CreateUserDto.class);
-        System.out.println(createUserDto.username);
+
+        // Determine if it's a register or login endpoint
+        if (path.equals("/users/register")) {
+            CreateUserDto createUserDto = objectMapper.readValue(requestBody, CreateUserDto.class);
+            usersService.registerUser(createUserDto);
+            String response = "User registered successfully";
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream outputStream = exchange.getResponseBody();
+            outputStream.write(response.getBytes());
+            outputStream.close();
+        } else if (path.equals("/users/login")) {
+
+            LoginUserDto loginUserDto = objectMapper.readValue(requestBody, LoginUserDto.class);
+            boolean success = usersService.loginUser(loginUserDto);
+            String response = success ? "Login successful" : "Login failed";
+            exchange.sendResponseHeaders(success ? 200 : 401, response.length());
+            OutputStream outputStream = exchange.getResponseBody();
+            outputStream.write(response.getBytes());
+            outputStream.close();
+        } else {
+            // If the path doesn't match either, return an error response
+            String response = "Invalid endpoint";
+            exchange.sendResponseHeaders(404, response.length());
+            OutputStream outputStream = exchange.getResponseBody();
+            outputStream.write(response.getBytes());
+            outputStream.close();
+        }
     }
 
-    private void handleGet(HttpExchange exchange) throws IOException{
+
+    private void handleGet(HttpExchange exchange) throws IOException {
 
         System.out.println("get user");
         String path = exchange.getRequestURI().getPath();
 
         String[] pathFragments = path.split("/");
-        if(pathFragments.length != 3){
+        if (pathFragments.length != 3) {
             String response = "Invalid Request";
             exchange.sendResponseHeaders(400, response.length());
             OutputStream outputStream = exchange.getResponseBody();
@@ -55,7 +84,7 @@ private DatabaseManager databaseManager ;
             outputStream.close();
             return;
         }
-       String username = pathFragments[2];
+        String username = pathFragments[2];
         System.out.println(username);
         //database userdata display
 
