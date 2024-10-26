@@ -51,13 +51,11 @@ public class UsersHandler implements HttpHandler {
             outputStream.write(response.getBytes());
             outputStream.close();
         } else if (path.equals("/users/login")) {
-
             LoginUserDto loginUserDto = objectMapper.readValue(requestBody, LoginUserDto.class);
-            boolean success = usersService.loginUser(loginUserDto);
-            String response = success ? "Login successful" : "Login failed";
-            exchange.sendResponseHeaders(success ? 200 : 401, response.length());
+            String token = usersService.loginUser(loginUserDto);
+            exchange.sendResponseHeaders( 200 , token.length());
             OutputStream outputStream = exchange.getResponseBody();
-            outputStream.write(response.getBytes());
+            outputStream.write(token.getBytes());
             outputStream.close();
         } else {
             // If the path doesn't match either, return an error response
